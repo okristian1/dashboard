@@ -9,11 +9,14 @@ import requests
 from config import quote_api_key, news_api_key
 
 def newsFeed():
-    api_url = 'https://newsapi.org/v2/top-headlines?sources=bbc-news&api_key='
+    limit = 7
+    api_url = 'https://newsapi.org/v2/everything?domains=techcrunch.com'
     response = requests.get(api_url, headers={'X-Api-Key': news_api_key})
     output = response.json()
-    for item in output['articles']:
+    for index, item in enumerate(output['articles']):
         print (item['title'])
+        if index == limit:
+            break
    # data = output['articles'][0]['title']
    # print (data)
     #news = "Todays Headlines: " + response.json#[0]["title"]
