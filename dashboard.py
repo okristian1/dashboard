@@ -6,7 +6,7 @@ import time
 import json
 import requests
 
-#from config import quote_api_key, news_api_key
+from config import quote_api_key, news_api_key
 
 def newsFeed():
     limit = 7
@@ -16,12 +16,12 @@ def newsFeed():
     print (" ")
     print ("Top Tech News right now: ")
     print (" ")
-    print ("===========================================================")
+    print ("========================================================================================================================")
     for index, item in enumerate(output['articles']):
         print (item['title'])
         if index == limit:
             break
-    print ("===========================================================")
+    print ("========================================================================================================================")
    # data = output['articles'][0]['title']
    # print (data)
     #news = "Todays Headlines: " + response.json#[0]["title"]
@@ -46,36 +46,36 @@ def getQuote():
     if response.status_code == requests.codes.ok:
         pretty_json = json.loads(response.text)
         quote = "Interesting Fact: " + pretty_json[0]["fact"]
-        print ("***************************************************")
+        print (" ")
+        print ("************************************************************************************************************************")
         print(quote)
-        print ("***************************************************")
+        print ("************************************************************************************************************************")
+        print (" ")
     else:
+        print ("************************************************************************************************************************")
         print("Error:", response.status_code, response.text)
-        
-def delete():
-    while True:
-        sys.stdout.write("\r" + time.ctime())
-        sys.stdout.flush()
-        time.sleep(1)
+        print ("************************************************************************************************************************")
 
 def getHostStatus():
-    with open(os.devnull, 'w') as DEVNULL:
-        try:
-            subprocess.check_call(
-                ['ping', '-c', '3', 'google.no'],
-                stdout=DEVNULL,  # suppress output
-                stderr=DEVNULL
-            )
-            sys.stdout.write('\r'+"                                                  ")
-            is_up = True
-            host_status = (f"Plex Media Server Status: {bcolors.OKGREEN}available{bcolors.ENDC}")
-            sys.stdout.write('\r'+host_status)
-            sys.stdout.flush()
-        except subprocess.CalledProcessError:
-            is_up = False
-            host_status = (f"Plex Media Server Status: {bcolors.WARNING}not available{bcolors.ENDC}")
-            sys.stdout.write('\r'+host_status)
-            sys.stdout.flush()
+    while True:
+        time.sleep(5)
+        with open(os.devnull, 'w') as DEVNULL:
+            try:
+                subprocess.check_call(
+                    ['ping', '-c', '3', 'plexmediaserver'],
+                    stdout=DEVNULL,  # suppress output
+                    stderr=DEVNULL
+                )
+                sys.stdout.write('\r'+"                                                  ")
+                is_up = True
+                host_status = (f"Plex Media Server Status: {bcolors.OKGREEN}available{bcolors.ENDC}")
+                sys.stdout.write('\r'+host_status)
+                sys.stdout.flush()
+            except subprocess.CalledProcessError:
+                is_up = False
+                host_status = (f"Plex Media Server Status: {bcolors.WARNING}not available{bcolors.ENDC}")
+                sys.stdout.write('\r'+host_status)
+                sys.stdout.flush()
 
 def bufferWriter(derp):
     with open("/dev/tty1", "wb+", buffering=0) as term:
@@ -91,13 +91,10 @@ def bufferWriter(derp):
 #            sys.stdout.flush()
 
 while True:
-    bufferWriter("space")
     bufferWriter("clear")
     newsFeed()
-    bufferWriter("space")
     getQuote()
-    bufferWriter("space")
     getHostStatus()
-    time.sleep(5)
+    time.sleep(3600)
 
-
+#sys.stdout.write("\r" + time.ctime())
