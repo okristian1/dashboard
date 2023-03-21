@@ -6,7 +6,7 @@ import time
 import json
 import requests
 
-from config import quote_api_key, news_api_key
+#from config import quote_api_key, news_api_key
 
 def newsFeed():
     limit = 7
@@ -52,21 +52,30 @@ def getQuote():
     else:
         print("Error:", response.status_code, response.text)
         
+def delete():
+    while True:
+        sys.stdout.write("\r" + time.ctime())
+        sys.stdout.flush()
+        time.sleep(1)
 
 def getHostStatus():
     with open(os.devnull, 'w') as DEVNULL:
         try:
             subprocess.check_call(
-                ['ping', '-c', '3', 'plexmediaserver'],
+                ['ping', '-c', '3', 'google.no'],
                 stdout=DEVNULL,  # suppress output
                 stderr=DEVNULL
             )
+            sys.stdout.write('\r'+"                                                  ")
             is_up = True
-            print (f"Plex Media Server Status: {bcolors.OKGREEN}available{bcolors.ENDC}")
-            host_status = "Plex Media Server is Available"
+            host_status = (f"Plex Media Server Status: {bcolors.OKGREEN}available{bcolors.ENDC}")
+            sys.stdout.write('\r'+host_status)
+            sys.stdout.flush()
         except subprocess.CalledProcessError:
             is_up = False
-            print (f"Plex Media Server Status: {bcolors.WARNING}not available{bcolors.ENDC}")
+            host_status = (f"Plex Media Server Status: {bcolors.WARNING}not available{bcolors.ENDC}")
+            sys.stdout.write('\r'+host_status)
+            sys.stdout.flush()
 
 def bufferWriter(derp):
     with open("/dev/tty1", "wb+", buffering=0) as term:
@@ -89,6 +98,6 @@ while True:
     getQuote()
     bufferWriter("space")
     getHostStatus()
-    time.sleep(3600)
+    time.sleep(5)
 
 
