@@ -13,10 +13,15 @@ def newsFeed():
     api_url = 'https://newsapi.org/v2/everything?domains=techcrunch.com'
     response = requests.get(api_url, headers={'X-Api-Key': news_api_key})
     output = response.json()
+    print (" ")
+    print ("Top Tech News right now: ")
+    print (" ")
+    print ("===========================================================")
     for index, item in enumerate(output['articles']):
         print (item['title'])
         if index == limit:
             break
+    print ("===========================================================")
    # data = output['articles'][0]['title']
    # print (data)
     #news = "Todays Headlines: " + response.json#[0]["title"]
@@ -40,8 +45,10 @@ def getQuote():
     response = requests.get(api_url, headers={'X-Api-Key': quote_api_key})
     if response.status_code == requests.codes.ok:
         pretty_json = json.loads(response.text)
-        quote = "Fact of the day: " + pretty_json[0]["fact"]
+        quote = "Interesting Fact: " + pretty_json[0]["fact"]
+        print ("***************************************************")
         print(quote)
+        print ("***************************************************")
     else:
         print("Error:", response.status_code, response.text)
         
@@ -61,22 +68,26 @@ def getHostStatus():
             is_up = False
             print (f"Plex Media Server Status: {bcolors.WARNING}not available{bcolors.ENDC}")
 
-def bufferWriter():
+def bufferWriter(derp):
     with open("/dev/tty1", "wb+", buffering=0) as term:
-        term.write("\033[2J".encode())
-        term.write("\033[H".encode())
-        term.write("\n".encode())
-        term.write("\n".encode())
-        term.write("\n\n\n".encode())
+        if derp == "clear":
+            term.write("\033[2J".encode())
+            term.write("\033[H".encode())
+        elif derp == "space":
+            print (" ")
+            #term.write("\n\n\n".encode())
         #term.write("Terminal Write Access Granted".encode())
 #        while True:
 #            print(term.read(1).decode(), end='')
 #            sys.stdout.flush()
 
 while True:
-    bufferWriter()
+    bufferWriter("space")
+    bufferWriter("clear")
     newsFeed()
+    bufferWriter("space")
     getQuote()
+    bufferWriter("space")
     getHostStatus()
     time.sleep(3600)
 
