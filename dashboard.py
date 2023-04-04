@@ -15,7 +15,6 @@ host_status=""
 quote=""
 news=""
 
-print("bagofdicks")
 
 def newsFeed():
     global news
@@ -60,30 +59,48 @@ def getQuote():
         print(quote)
         print ("************************************************************************************************************************")
         print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
     else:
         print ("************************************************************************************************************************")
         print("Error:", response.status_code, response.text)
         print ("************************************************************************************************************************")
+        print (" ")
+        print (" ")
+        print (" ")
+
+UP = "\x1B[3A"
+CLR = "\x1B[0K"
 
 def getHostStatus():
-    global host_status
+    plex_status = ""
+    internet_status = ""
+    offline_test = ""
+    iptoping = ['google.com', 'plex.com', 'offline']
     with open(os.devnull, 'w') as DEVNULL:
-        try:
-            subprocess.check_call(
-                ['ping', '-c', '3', '192.168.68.111'],
-                stdout=DEVNULL,  # suppress output
-                stderr=DEVNULL
+        for ip in iptoping:
+            res = subprocess.call(
+               ['ping', '-c', '1', ip],
+               stdout=DEVNULL,  # suppress output
+               stderr=DEVNULL
             )
-            sys.stdout.write('\r'+"                                                  ")
-            is_up = True
-            host_status = (f"Plex Media Server Status: {bcolors.OKGREEN}available{bcolors.ENDC}")
-            sys.stdout.write('\r'+host_status)
-            sys.stdout.flush()
-        except subprocess.CalledProcessError:
-            is_up = False
-            host_status = (f"Plex Media Server Status: {bcolors.WARNING}not available{bcolors.ENDC}")
-            sys.stdout.write('\r'+host_status)
-            sys.stdout.flush()
+            if (res==0):
+                if (ip == 'google.com'):
+                    internet_status = (f"Internet Status: {bcolors.OKGREEN}online{bcolors.ENDC}")
+                elif (ip == 'plex.com'):
+                    plex_status = (f"Plex Media Server Status: {bcolors.OKGREEN}available{bcolors.ENDC}")
+                elif (ip == 'offline'):
+                    offline_test = (f"Offline test: {bcolors.OKGREEN}available{bcolors.ENDC}")
+            else:
+                if (ip == 'google.com'):
+                    internet_status = (f"Plex Media Server Status: {bcolors.WARNING}NOT available{bcolors.ENDC}")
+                elif (ip == '192.168.68.102'):
+                    plex_status = (f"Plex Media Server Status: {bcolors.WARNING}NOT available{bcolors.ENDC}")
+                elif (ip == 'offline'):
+                    offline_test = (f"Offline test: {bcolors.WARNING}NOT available{bcolors.ENDC}")
+    print(f"{UP}{plex_status}{CLR}\n{internet_status}{CLR}\n{offline_test}") 
+
 
 def clear():
     os.system('clear')
