@@ -77,7 +77,7 @@ def getHostStatus():
     plex_status = ""
     internet_status = ""
     offline_test = ""
-    iptoping = ['google.com', 'plex.com', 'offline']
+    iptoping = ['google.com', 'plexmediaserver', 'iphone']
     with open(os.devnull, 'w') as DEVNULL:
         for ip in iptoping:
             res = subprocess.call(
@@ -88,17 +88,17 @@ def getHostStatus():
             if (res==0):
                 if (ip == 'google.com'):
                     internet_status = (f"Internet Status: {bcolors.OKGREEN}online{bcolors.ENDC}")
-                elif (ip == 'plex.com'):
+                elif (ip == 'plexmediaserver'):
                     plex_status = (f"Plex Media Server Status: {bcolors.OKGREEN}available{bcolors.ENDC}")
-                elif (ip == 'offline'):
-                    offline_test = (f"Offline test: {bcolors.OKGREEN}available{bcolors.ENDC}")
+                elif (ip == 'iphone'):
+                    offline_test = (f"iPhone test: {bcolors.OKGREEN}available{bcolors.ENDC}")
             else:
                 if (ip == 'google.com'):
                     internet_status = (f"Plex Media Server Status: {bcolors.WARNING}NOT available{bcolors.ENDC}")
-                elif (ip == '192.168.68.102'):
+                elif (ip == 'plexmediaserver'):
                     plex_status = (f"Plex Media Server Status: {bcolors.WARNING}NOT available{bcolors.ENDC}")
-                elif (ip == 'offline'):
-                    offline_test = (f"Offline test: {bcolors.WARNING}NOT available{bcolors.ENDC}")
+                elif (ip == 'iphone'):
+                    offline_test = (f"iPhone test: {bcolors.WARNING}NOT available{bcolors.ENDC}")
     print(f"{UP}{plex_status}{CLR}\n{internet_status}{CLR}\n{offline_test}") 
 
 
@@ -111,9 +111,9 @@ newsFeed()
 getQuote()
 getHostStatus()
 
-schedule.every(1130).seconds.do(clear)
-schedule.every(1130).seconds.do(newsFeed)
-schedule.every(1130).seconds.do(getQuote)
+schedule.every(3600).seconds.do(clear)
+schedule.every(3600).seconds.do(newsFeed)
+schedule.every(3600).seconds.do(getQuote)
 schedule.every(5).seconds.do(getHostStatus)
 
 while True:
