@@ -87,11 +87,11 @@ def getHostStatus():
             )
             if (res==0):
                 if (ip == 'google.com'):
-                    internet_status = (f"Internet Status: {bcolors.OKGREEN}online{bcolors.ENDC}")
+                    internet_status = (f"Internet Status: {bcolors.OKGREEN}online     {bcolors.ENDC}")
                 elif (ip == 'plexmediaserver'):
-                    plex_status = (f"Plex Media Server Status: {bcolors.OKGREEN}available{bcolors.ENDC}")
+                    plex_status = (f"Plex Media Server Status: {bcolors.OKGREEN}available     {bcolors.ENDC}")
                 elif (ip == 'iphone'):
-                    offline_test = (f"iPhone test: {bcolors.OKGREEN}available{bcolors.ENDC}")
+                    offline_test = (f"iPhone test: {bcolors.OKGREEN}available     {bcolors.ENDC}")
             else:
                 if (ip == 'google.com'):
                     internet_status = (f"Plex Media Server Status: {bcolors.WARNING}NOT available{bcolors.ENDC}")
