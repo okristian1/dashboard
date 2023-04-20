@@ -13,11 +13,15 @@ from config import quote_api_key, news_api_key
 
 host_status=""
 quote=""
+quote_status=""
 news=""
+news_status=""
 
-
+print ("Beep boop initializing dashboard")
 def newsFeed():
     global news
+    global news_status
+    news_status="no"
     limit = 7
     api_url = 'https://newsapi.org/v2/everything?domains=techcrunch.com'
     response = requests.get(api_url, headers={'X-Api-Key': news_api_key})
@@ -31,6 +35,7 @@ def newsFeed():
         if index == limit:
             break
     print ("========================================================================================================================")
+    news_status="nok"
 
 
 class bcolors:
@@ -45,9 +50,10 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-
 def getQuote():
     global quote
+    global quote_status
+    quote_status = "no"
     limit = 1
     api_url = 'https://api.api-ninjas.com/v1/facts?limit={}'.format(limit)
     response = requests.get(api_url, headers={'X-Api-Key': quote_api_key})
@@ -62,6 +68,7 @@ def getQuote():
         print (" ")
         print (" ")
         print (" ")
+        quote_status = "nok"
     else:
         print ("************************************************************************************************************************")
         print("Error:", response.status_code, response.text)
@@ -69,14 +76,12 @@ def getQuote():
         print (" ")
         print (" ")
         print (" ")
-
-UP = "\x1B[3A"
-CLR = "\x1B[0K"
+        quote_status = "nok"
 
 def getHostStatus():
-    plex_status = ""
-    internet_status = ""
-    offline_test = ""
+    global plex_status
+    global internet_status
+    global offline_test
     iptoping = ['google.com', 'plexmediaserver', 'iphone']
     with open(os.devnull, 'w') as DEVNULL:
         for ip in iptoping:
@@ -99,24 +104,37 @@ def getHostStatus():
                     plex_status = (f"Plex Media Server Status: {bcolors.WARNING}NOT available{bcolors.ENDC}")
                 elif (ip == 'iphone'):
                     offline_test = (f"iPhone test: {bcolors.WARNING}NOT available{bcolors.ENDC}")
-    print(f"{UP}{plex_status}{CLR}\n{internet_status}{CLR}\n{offline_test}") 
 
+def notOK():
+    quote_status="not ok"
+    news_status="not ok"
+
+def printHostStatus():
+    UP = "\x1B[3A"
+    CLR = "\x1B[0K"
+
+    if (quote_status == "ok") and (news_status == "ok"):
+        print(f"{UP}{plex_status}{CLR}\n{internet_status}{CLR}\n{offline_test}") 
+    else:
+        print ("potatoe")
 
 def clear():
     os.system('clear')
 
-
 clear()
+notOK()
+getHostStatus()
 newsFeed()
 getQuote()
-getHostStatus()
+printHostStatus()
 
-schedule.every(3600).seconds.do(clear)
-schedule.every(3600).seconds.do(newsFeed)
-schedule.every(3600).seconds.do(getQuote)
-schedule.every(5).seconds.do(getHostStatus)
+schedule.every().hour.do(clear)
+schedule.every().hour.do(notOK)
+schedule.every().hour.do(newsFeed)
+schedule.every().hour.do(getQuote)
+schedule.every(1).seconds.do(getHostStatus)
+schedule.every(1).seconds.do(printHostStatus)
 
 while True:
     schedule.run_pending()
-    time.sleep(5)
-
+    time.sleep(1)
